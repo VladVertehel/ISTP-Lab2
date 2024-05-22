@@ -50,7 +50,7 @@ namespace ReviewApp.Controllers
             return Ok(owner);
         }
 
-        [HttpGet("{ownerId}/product")]
+        [Microsoft.AspNetCore.Mvc.HttpGet("{ownerId}/product")]
         [ProducesResponseType(200, Type = typeof(Owner))]
         [ProducesResponseType(400)]
         public IActionResult GetProductByOwner(int ownerId)

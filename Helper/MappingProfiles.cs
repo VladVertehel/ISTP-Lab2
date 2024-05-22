@@ -9,6 +9,7 @@ namespace ReviewApp.Helper
         public MappingProfiles()
         {
             CreateMap<Product, ProductDto>();
+            CreateMap<Category, CategoryDto>();
         }
     }
 }

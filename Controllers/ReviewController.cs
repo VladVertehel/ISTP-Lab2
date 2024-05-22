@@ -7,6 +7,8 @@ using ReviewApp.Repository;
 
 namespace ReviewApp.Controllers
 {
+    [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
+    [ApiController]
     public class ReviewController : Controller
     {
         private readonly IReviewRepository _reviewRepository;
@@ -36,7 +38,7 @@ namespace ReviewApp.Controllers
             if (!_reviewRepository.ReviewExists(reviewId))
                 return NotFound();
 
-            var product = _mapper.Map<ProductDto>(_reviewRepository.GetReview(reviewId));
+            var product = _mapper.Map<ReviewDto>(_reviewRepository.GetReview(reviewId));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

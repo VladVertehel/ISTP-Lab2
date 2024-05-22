@@ -1,19 +1,15 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using ReviewApp.Dto;
 using ReviewApp.Interfaces;
 using ReviewApp.Models;
-using System.Web.Mvc;
-using System.Collections.Generic;
-using AutoMapper;
-using ReviewApp.Dto;
 using ReviewApp.Repository;
 
 namespace ReviewApp.Controllers
 {
     [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
     [ApiController]
-    public class OwnerController : Microsoft.AspNetCore.Mvc.Controller
+    public class OwnerController : Controller
     {
         private readonly IOwnerRepository _ownerRepository;
         private readonly IMapper _mapper;
@@ -42,7 +38,7 @@ namespace ReviewApp.Controllers
             if (!_ownerRepository.OwnerExists(ownerId))
                 return NotFound();
 
-            var owner = _mapper.Map<ProductDto>(_ownerRepository.GetOwner(ownerId));
+            var owner = _mapper.Map<OwnerDto>(_ownerRepository.GetOwner(ownerId));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -59,7 +55,7 @@ namespace ReviewApp.Controllers
             {
                 return NotFound();
             }
-            var owner = _mapper.Map<List<OwnerDto>>(_ownerRepository.GetProductByOwner(ownerId));
+            var owner = _mapper.Map<List<ProductDto>>(_ownerRepository.GetProductByOwner(ownerId));
 
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);

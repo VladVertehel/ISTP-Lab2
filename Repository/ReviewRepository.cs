@@ -32,7 +32,7 @@ namespace ReviewApp.Repository
 
         public bool ReviewExists(int reviewId)
         {
-            return _context.Reviews.Any(r => r.Id != reviewId);
+            return _context.Reviews.Any(r => r.Id == reviewId);
         }
     }
 }

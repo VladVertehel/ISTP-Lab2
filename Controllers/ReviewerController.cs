@@ -27,6 +27,7 @@ namespace ReviewApp.Controllers
             var reviewers = _mapper.Map<List<ReviewerDto>>(_reviewerRepository.GetReviewers());
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
             return Ok(reviewers);
         }
 
@@ -38,7 +39,7 @@ namespace ReviewApp.Controllers
             if (!_reviewerRepository.ReviewerExists(reviewerId))
                 return NotFound();
 
-            var reviewer = _mapper.Map<ProductDto>(_reviewerRepository.GetReviewer(reviewerId));
+            var reviewer = _mapper.Map<ReviewerDto>(_reviewerRepository.GetReviewer(reviewerId));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -52,7 +53,7 @@ namespace ReviewApp.Controllers
             if (!_reviewerRepository.ReviewerExists(reviewerId))
                 return NotFound();
 
-            var reviews = _mapper.Map<List<ReviewerDto>>(_reviewerRepository.GetReviewsByReviewer(reviewerId));
+            var reviews = _mapper.Map<List<ReviewDto>>(_reviewerRepository.GetReviewsByReviewer(reviewerId));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

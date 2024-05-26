@@ -16,10 +16,12 @@ namespace ReviewApp.Controllers
     public class ProductController : Microsoft.AspNetCore.Mvc.Controller
     {
         private readonly IProductRepository _productRepository;
+        private readonly IOwnerRepository _ownerRepository;
         private readonly IMapper _mapper;
-        public ProductController(IProductRepository productRepository, IMapper mapper) 
+        public ProductController(IProductRepository productRepository, IOwnerRepository ownerRepository, IMapper mapper) 
         {
             _productRepository = productRepository;
+            _ownerRepository = ownerRepository;
             _mapper = mapper;
         }
 
@@ -81,6 +83,35 @@ namespace ReviewApp.Controllers
 
             return Ok("Successfully created");
         }
+        [Microsoft.AspNetCore.Mvc.HttpPut("{productId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateProduct(int productId,
+           [FromQuery] int ownerId, [FromQuery] int catId,
+           [FromBody] ProductDto updatedProduct)
+        {
+            if (updatedProduct == null)
+                return BadRequest(ModelState);
 
+            if (productId != updatedProduct.Id)
+                return BadRequest(ModelState);
+
+            if (!_productRepository.ProductExists(productId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var pokemonMap = _mapper.Map<Product>(updatedProduct);
+
+            if (!_productRepository.UpdateProduct(ownerId, catId, pokemonMap))
+            {
+                ModelState.AddModelError("", "Something went wrong updating product");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
     }
 }

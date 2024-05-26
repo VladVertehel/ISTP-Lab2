@@ -11,5 +11,7 @@ namespace ReviewApp.Interfaces
         Product GetProductPrice(int price);
         Product GetProductYear(int year);
         bool ProductExists(int productId);
+        bool CreateProduct(int ownerId, int categoryId, Product product);
+        bool Save();
     }
 }

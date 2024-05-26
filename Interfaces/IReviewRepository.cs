@@ -8,5 +8,7 @@ namespace ReviewApp.Interfaces
         Review GetReview(int reviewId);
         ICollection<Review> GetReviewsOfAProduct(int productId);
         bool ReviewExists(int reviewId);
+        bool CreateReview(Review review);
+        bool Save();
     }
 }

@@ -18,11 +18,16 @@ namespace ReviewApp.Controllers
         private readonly IProductRepository _productRepository;
         private readonly IOwnerRepository _ownerRepository;
         private readonly IMapper _mapper;
-        public ProductController(IProductRepository productRepository, IOwnerRepository ownerRepository, IMapper mapper) 
+        private readonly IReviewRepository _reviewRepository;
+
+        public ProductController(IProductRepository productRepository, 
+            IOwnerRepository ownerRepository, IMapper mapper,
+            IReviewRepository reviewRepository) 
         {
             _productRepository = productRepository;
             _ownerRepository = ownerRepository;
             _mapper = mapper;
+            _reviewRepository = reviewRepository;
         }
 
         [Microsoft.AspNetCore.Mvc.HttpGet]
@@ -109,6 +114,36 @@ namespace ReviewApp.Controllers
             {
                 ModelState.AddModelError("", "Something went wrong updating product");
                 return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
+
+        [Microsoft.AspNetCore.Mvc.HttpDelete("{pokeId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteProduct(int pokeId)
+        {
+            if (!_productRepository.ProductExists(pokeId))
+            {
+                return NotFound();
+            }
+
+            var reviewsToDelete = _reviewRepository.GetReviewsOfAProduct(pokeId);
+            var pokemonToDelete = _productRepository.GetProductId(pokeId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_reviewRepository.DeleteReviews(reviewsToDelete.ToList()))
+            {
+                ModelState.AddModelError("", "Something went wrong when deleting reviews");
+            }
+
+            if (!_productRepository.DeleteProduct(pokemonToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong deleting owner");
             }
 
             return NoContent();

@@ -32,6 +32,12 @@ namespace ReviewApp.Repository
             return Save();
         }
 
+        public bool DeleteProduct(Product product)
+        {
+            _context.Remove(product);
+            return Save();
+        }
+
         public Product GetProductDescription(string description)
         {
             return _context.Products.Where(p => p.Description == description).FirstOrDefault();

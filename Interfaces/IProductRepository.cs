@@ -13,6 +13,7 @@ namespace ReviewApp.Interfaces
         bool ProductExists(int productId);
         bool CreateProduct(int ownerId, int categoryId, Product product);
         bool UpdateProduct(int ownerId, int categoryId, Product product);
+        bool DeleteProduct(Product product);
         bool Save();
     }
 }

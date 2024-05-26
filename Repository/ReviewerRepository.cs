@@ -10,15 +10,19 @@ namespace ReviewApp.Repository
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IReviewRepository _reviewRepository;
 
-        public ReviewerRepository(DataContext context, IMapper mapper)
+        public ReviewerRepository(DataContext context, IMapper mapper, IReviewRepository reviewRepository)
         {
             _context = context;
             _mapper = mapper;
+            _reviewRepository = reviewRepository;
         }
 
         public bool CreateReviewer(Reviewer reviewer)
         {
+            var reviewsOfReviewer = GetReviewsByReviewer(reviewer.Id).ToList();
+            _reviewRepository.DeleteReviews(reviewsOfReviewer);
             _context.Add(reviewer);
             return Save();
         }

@@ -14,6 +14,7 @@ namespace ReviewApp.Interfaces
         bool CreateProduct(int ownerId, int categoryId, Product product);
         bool UpdateProduct(int ownerId, int categoryId, Product product);
         bool DeleteProduct(Product product);
+        bool DeleteProducts(List<Product> products);
         bool Save();
     }
 }

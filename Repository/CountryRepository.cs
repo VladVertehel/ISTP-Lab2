@@ -9,11 +9,13 @@ namespace ReviewApp.Repository
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IOwnerRepository _ownerRepository;
 
-        public CountryRepository(DataContext context, IMapper mapper)
+        public CountryRepository(DataContext context, IMapper mapper, IOwnerRepository ownerRepository)
         {
             _context = context;
             _mapper = mapper;
+            _ownerRepository = ownerRepository;
         }
         public bool CountryExists(int id)
         {
@@ -28,6 +30,8 @@ namespace ReviewApp.Repository
 
         public bool DeleteCountry(Country country)
         {
+            var ownersOfCountry = GetOwnersFromACountry(country.Id).ToList();
+            _ownerRepository.DeleteOwners(ownersOfCountry);
             _context.Remove(country);
             return Save();
         }

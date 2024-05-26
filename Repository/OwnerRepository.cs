@@ -1,17 +1,18 @@
-﻿using ReviewApp.Interfaces;
+﻿using ReviewApp.Data;
+using ReviewApp.Interfaces;
 using ReviewApp.Models;
-using AutoMapper;
-using ReviewApp.Data;
 
 namespace ReviewApp.Repository
 {
     public class OwnerRepository : IOwnerRepository
     {
         private readonly DataContext _context;
+        private readonly IProductRepository _productRepository;
 
-        public OwnerRepository(DataContext context)
+        public OwnerRepository(DataContext context, IProductRepository productRepository)
         {
             _context = context;
+            _productRepository = productRepository;
         }
 
         public bool CreateOwner(Owner owner)
@@ -22,7 +23,17 @@ namespace ReviewApp.Repository
 
         public bool DeleteOwner(Owner owner)
         {
+            var productsOfOwner = GetProductByOwner(owner.Id).ToList();
+            _productRepository.DeleteProducts(productsOfOwner);
             _context.Remove(owner);
+            return Save();
+        }
+
+        public bool DeleteOwners(List<Owner> owners)
+        {
+            for (int i = 0; i < owners.Count(); i++)
+                DeleteOwner(owners[i]);
+
             return Save();
         }
 

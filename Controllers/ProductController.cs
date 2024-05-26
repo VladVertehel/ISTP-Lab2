@@ -130,16 +130,10 @@ namespace ReviewApp.Controllers
                 return NotFound();
             }
 
-            var reviewsToDelete = _reviewRepository.GetReviewsOfAProduct(pokeId);
             var pokemonToDelete = _productRepository.GetProductId(pokeId);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            if (!_reviewRepository.DeleteReviews(reviewsToDelete.ToList()))
-            {
-                ModelState.AddModelError("", "Something went wrong when deleting reviews");
-            }
 
             if (!_productRepository.DeleteProduct(pokemonToDelete))
             {

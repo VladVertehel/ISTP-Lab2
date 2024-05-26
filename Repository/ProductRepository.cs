@@ -7,9 +7,12 @@ namespace ReviewApp.Repository
     public class ProductRepository : IProductRepository
     {
         private readonly DataContext _context;
-        public ProductRepository(DataContext context)
+        private readonly IReviewRepository _reviewRepository;
+
+        public ProductRepository(DataContext context, IReviewRepository reviewRepository)
         {
             _context = context;
+            _reviewRepository = reviewRepository;
         }
 
         public bool CreateProduct(int ownerId, int categoryId, Product product)
@@ -34,7 +37,19 @@ namespace ReviewApp.Repository
 
         public bool DeleteProduct(Product product)
         {
+            var reviewsOfProduct = _reviewRepository.GetReviewsOfAProduct(product.Id).ToList();
+
+            _reviewRepository.DeleteReviews(reviewsOfProduct);
             _context.Remove(product);
+
+            return Save();
+        }
+
+        public bool DeleteProducts(List<Product> products)
+        {
+            for (int i = 0; i < products.Count(); i++)
+                DeleteProduct(products[i]);
+
             return Save();
         }
 

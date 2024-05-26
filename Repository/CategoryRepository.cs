@@ -7,9 +7,12 @@ namespace ReviewApp.Repository
     public class CategoryRepository : ICategoryRepository
     {
         private DataContext _context;
-        public CategoryRepository(DataContext context)
+        private readonly IProductRepository _productRepository;
+
+        public CategoryRepository(DataContext context, IProductRepository productRepository)
         {
-               _context = context;
+            _context = context;
+            _productRepository = productRepository;
         }
         public bool CategoryExists(int id)
         {
@@ -24,6 +27,8 @@ namespace ReviewApp.Repository
 
         public bool DeleteCategory(Category category)
         {
+            var productsOfACategory = GetProductByCategory(category.Id).ToList();
+            _productRepository.DeleteProducts(productsOfACategory);
             _context.Remove(category);
             return Save();
         }

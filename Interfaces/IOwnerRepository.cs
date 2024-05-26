@@ -12,6 +12,7 @@ namespace ReviewApp.Interfaces
         bool CreateOwner(Owner owner);
         bool UpdateOwner(Owner owner);
         bool DeleteOwner(Owner owner);
+        bool DeleteOwners(List<Owner> owners);
         bool Save();
     }
 }
